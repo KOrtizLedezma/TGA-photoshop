@@ -29,6 +29,7 @@ void task7();
 void task8();
 void task9();
 void task10();
+void task11();
 void makeTask();
 void printHelpMessage();
 bool isValidTgaFile(const string& filename);
@@ -49,6 +50,10 @@ void addition(string& filename1, string& filename2, string& output);
 void subtract(string& filename1, string& filename2, string& output);
 void screen(string& filename1, string& filename2, string& output);
 void multiply(string& filename1, string& filename2, string& output);
+bool isMethod(string& method);
+bool isValue(string& value);
+
+Image processedImage;
 
 int main(int argc, char* argv[]) {
 
@@ -72,194 +77,328 @@ int main(int argc, char* argv[]) {
             cout << "File does not exist." << endl;
             return 0;
         }
-        //check if method exist
-        vector<string> methods{"multiply", "screen", "subtract", "addition", "overlay", "addblue", "addgreen", "addred",
-                               "scaleblue", "scalegreen", "scalered", "combine", "onlyblue", "onlygreen", "onlyred", "flip"};
 
-        string method = argv[3];
-        bool found = false;
-        for (string& current : methods) {
-            if (current == method) {
-                found = true;
-                break;
+        for (int i = 3; i < argc ; i++){
+            string current = argv[i];
+            if(isMethod(current)){
+                if(current == "multiply"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValidTgaFile(argv[i+1])){
+                            if(fileExists(argv[i+1])){
+                                string secondImage = argv[i+1];
+                                multiply(firstImageFileName, secondImage, outputFileName);
+                                cout << "multiply" << endl;
+                                if (i + 1 < argc){
+                                    i = i + 1;// check logic here
+                                }
+                            }
+                            else{
+                                cout << "Invalid argument, file does not exist." << endl;
+                                return 0;
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, invalid file name." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "subtract"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValidTgaFile(argv[i+1])){
+                            if(fileExists(argv[i+1])){
+                                string secondImage = argv[i+1];
+                                subtract(secondImage, firstImageFileName, outputFileName);
+                                cout << "subtract" << endl;
+                                if (i + 1 < argc){
+                                    i = i + 1;// check logic here
+                                }
+                            }
+                            else{
+                                cout << "Invalid argument, file does not exist." << endl;
+                                return 0;
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, invalid file name." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "overlay"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValidTgaFile(argv[i+1])){
+                            if(fileExists(argv[i+1])){
+                                string secondImage = argv[i+1];
+                                overlay(firstImageFileName, secondImage, outputFileName);
+                                cout << "overlay" << endl;
+                                if (i + 1 < argc){
+                                    i = i + 1;// check logic here
+                                }
+                            }
+                            else{
+                                cout << "Invalid argument, file does not exist." << endl;
+                                return 0;
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, invalid file name." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "screen"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValidTgaFile(argv[i+1])){
+                            if(fileExists(argv[i+1])){
+                                string secondImage = argv[i+1];
+                                screen(secondImage, firstImageFileName, outputFileName);
+                                cout << "screen" << endl;
+                                if (i + 1 < argc){
+                                    i = i + 1;// check logic here
+                                }
+                            }
+                            else{
+                                cout << "Invalid argument, file does not exist." << endl;
+                                return 0;
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, invalid file name." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "combine"){
+                    if(argv[i+1] == nullptr || argv[i+2] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValidTgaFile(argv[i+1]) && isValidTgaFile(argv[i+2])){
+                            if(fileExists(argv[i+1]) && fileExists(argv[i+2])){
+                                string secondImage = argv[i+1];
+                                string thirdImage = argv[i+2];
+                                combine(firstImageFileName, secondImage, thirdImage, outputFileName);
+                                cout << "combine" << endl;
+                                if (i + 1 < argc){
+                                    i = i + 2;// check logic here
+                                }
+                            }
+                            else{
+                                cout << "Invalid argument, file does not exist." << endl;
+                                return 0;
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, invalid file name." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "flip"){
+                    flip(firstImageFileName, outputFileName);
+                    cout << "flip" << endl;
+                }
+                if(current == "onlyred"){
+                    onlyred(firstImageFileName, outputFileName);
+                    cout << "onlyred" << endl;
+                }
+                if(current == "onlyblue"){
+                    onlyblue(firstImageFileName, outputFileName);
+                    cout << "onlyblue" << endl;
+                }
+                if(current == "onlygreen"){
+                    onlygreen(firstImageFileName, outputFileName);
+                    cout << "onlygreen" << endl;
+                }
+                if(current == "addred"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            addred(firstImageFileName, outputFileName, valueInt);
+                            cout << "addred" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "addgreen"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            addgreen(firstImageFileName, outputFileName, valueInt);
+                            cout << "addgreen" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "addblue"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            addblue(firstImageFileName, outputFileName, valueInt);
+                            cout << "addblue" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "scalered"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            scalered(firstImageFileName, outputFileName, valueInt);
+                            cout << "scalered" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "scaleblue"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            scaleblue(firstImageFileName, outputFileName, valueInt);
+                            cout << "scaleblue" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
+                if(current == "scalegreen"){
+                    if(argv[i+1] == nullptr){
+                        cout << "Missing argument." << endl;
+                        return 0;
+                    }
+                    else{
+                        if(isValue(reinterpret_cast<string &>(argv[i + 1]))){
+                            int valueInt = stoi(argv[i+1]);
+                            scalegreen(firstImageFileName, outputFileName, valueInt);
+                            cout << "scalegreen" << endl;
+                            if (i + 1 < argc){
+                                i = i + 1;// check logic here
+                            }
+                        }
+                        else{
+                            cout << "Invalid argument, expected number." << endl;
+                            return 0;
+                        }
+
+                    }
+                }
             }
-        }
-        if (!found){
-            cout << "Invalid method name." << endl;
-            return 0;
+            else{
+                cout << "Invalid method name." << endl;
+                return 0;
+            }
+            firstImageFileName = outputFileName;
         }
 
-        //Multiply
-        if (method == "multiply" && argc == 5){
-            string secondImageFileName = argv[4];
-            if (!isValidTgaFile(secondImageFileName)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(secondImageFileName)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            multiply(firstImageFileName, secondImageFileName, outputFileName);
-        }
-        //Screen
-        else if(method == "screen" && argc >= 5){
-            string secondImageFileName = argv[4];
-            if (!isValidTgaFile(secondImageFileName)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(secondImageFileName)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            screen(firstImageFileName, secondImageFileName, outputFileName);
-        }
-        //Subtract
-        else if(method == "subtract" && argc >= 5){
-            string secondImageFileName = argv[4];
-            if (!isValidTgaFile(secondImageFileName)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(secondImageFileName)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            subtract(firstImageFileName, secondImageFileName, outputFileName);
-        }
-        //Addition
-        else if(method == "addition" && argc >= 5){
-            string secondImageFileName = argv[4];
-            if (!isValidTgaFile(secondImageFileName)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(secondImageFileName)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            addition(firstImageFileName, secondImageFileName, outputFileName);
-        }
-        //Overlay
-        else if(method == "overlay" && argc >= 5){
-            string secondImageFileName = argv[4];
-            if (!isValidTgaFile(secondImageFileName)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(secondImageFileName)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            overlay(firstImageFileName, secondImageFileName, outputFileName);
-        }
-        //Add Blue
-        else if(method == "addblue" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                addblue(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Add Green
-        else if(method == "addgreen" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                addgreen(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Add Red
-        else if(method == "addred" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                addred(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Scale Blue
-        else if(method == "scaleblue" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                scaleblue(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Scale Green
-        else if(method == "scalegreen" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                scalegreen(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Scale Red
-        else if(method == "scalered" && argc >= 5){
-            char* value = argv[4];
-            try {
-                int valueInt = stoi(value);
-                scalered(firstImageFileName, outputFileName, valueInt);
-            } catch (const std::invalid_argument& e) {
-                cout << "Invalid argument, expected number." << endl;
-            }
-        }
-        //Combine
-        else if(method == "combine" && argc >= 6){
-            string greenChannel = argv[4];
-            if (!isValidTgaFile(greenChannel)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(greenChannel)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            string blueChannel = argv[5];
-            if (!isValidTgaFile(blueChannel)) {
-                cout << "Invalid argument, invalid file name." << endl;
-                return 1;
-            }
-            if (!fileExists(blueChannel)) {
-                cout << "Invalid argument, file does not exist." << endl;
-                return 1;
-            }
-            combine(firstImageFileName, blueChannel, greenChannel, outputFileName);
-        }
-        //Only Blue
-        else if(method == "onlyblue" && argc >= 4){
-            onlyblue(firstImageFileName, outputFileName);
-        }
-        //Only Green
-        else if(method == "onlygreen" && argc >= 4){
-            onlygreen(firstImageFileName, outputFileName);
-        }
-        //Only Red
-        else if(method == "onlyred" && argc >= 4){
-            onlyred(firstImageFileName, outputFileName);
-        }
-        //Flip
-        else if(method == "flip" && argc >= 4){
-            flip(firstImageFileName, outputFileName);
-        }
+    }
+    return 0;
+}
 
-        else{
-            cout << "Missing argument." << endl;
-        }
+void checkIfOutput(string& output){
+    if (output.rfind("output/", 0) != 0){
+        output = "output/"+output;
     }
 }
 
+bool isValue(string& value){
+    try {
+        int valueInt = stoi(value);
+        return true;
+    } catch (const std::invalid_argument& e) {
+        return false;
+    }
+}
+
+bool isMethod(string& method){
+    vector<string> methods{"multiply", "screen", "subtract", "addition", "overlay", "addblue", "addgreen", "addred",
+                           "scaleblue", "scalegreen", "scalered", "combine", "onlyblue", "onlygreen", "onlyred", "flip"};
+    for (string& current : methods) {
+        if (current == method) {
+            return true;
+        }
+    }
+    return false;
+}
+
 void multiply(string& filename1, string& filename2, string& output){
+    checkIfOutput(output);
     Image firstImage, secondImage;
     firstImage.read(filename1);
     secondImage.read(filename2);
@@ -268,6 +407,7 @@ void multiply(string& filename1, string& filename2, string& output){
 }
 
 void screen(string& filename1, string& filename2, string& output){
+    checkIfOutput(output);
     Image firstImage, secondImage;
     firstImage.read(filename2);
     secondImage.read(filename1);
@@ -276,6 +416,7 @@ void screen(string& filename1, string& filename2, string& output){
 }
 
 void subtract(string& filename1, string& filename2, string& output){
+    checkIfOutput(output);
     Image firstImage, secondImage;
     firstImage.read(filename2);
     secondImage.read(filename1);
@@ -284,6 +425,7 @@ void subtract(string& filename1, string& filename2, string& output){
 }
 
 void addition(string& filename1, string& filename2, string& output){
+    checkIfOutput(output);
     Image firstImage, secondImage;
     firstImage.read(filename1);
     secondImage.read(filename2);
@@ -292,6 +434,7 @@ void addition(string& filename1, string& filename2, string& output){
 }
 
 void overlay(string& filename1, string& filename2, string& output){
+    checkIfOutput(output);
     Image firstImage, secondImage;
     firstImage.read(filename1);
     secondImage.read(filename2);
@@ -300,6 +443,7 @@ void overlay(string& filename1, string& filename2, string& output){
 }
 
 void addblue(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.addBlue(value);
@@ -307,6 +451,7 @@ void addblue(string& filename, string& output, int& value){
 }
 
 void addgreen(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.addGreen(value);
@@ -314,6 +459,7 @@ void addgreen(string& filename, string& output, int& value){
 }
 
 void addred(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.addRed(value);
@@ -321,6 +467,7 @@ void addred(string& filename, string& output, int& value){
 }
 
 void scaleblue(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.scaleBlue(value);
@@ -328,6 +475,7 @@ void scaleblue(string& filename, string& output, int& value){
 }
 
 void scalegreen(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.scaleGreen(value);
@@ -335,6 +483,7 @@ void scalegreen(string& filename, string& output, int& value){
 }
 
 void scalered(string& filename, string& output, int& value){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.scaleRed(value);
@@ -342,15 +491,17 @@ void scalered(string& filename, string& output, int& value){
 }
 
 void combine(string& filename1, string& filename2, string& filename3, string& output){
+    checkIfOutput(output);
     Image blue, green, red;
-    blue.read(filename2);
-    green.read(filename3);
+    blue.read(filename3);
+    green.read(filename2);
     red.read(filename1);
     blue.combine(green,red);
     blue.write(output);
 }
 
 void onlyblue(string& filename, string& output){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.onlyBlue();
@@ -358,6 +509,7 @@ void onlyblue(string& filename, string& output){
 }
 
 void onlygreen(string& filename, string& output){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.onlyGreen();
@@ -365,6 +517,7 @@ void onlygreen(string& filename, string& output){
 }
 
 void onlyred(string& filename, string& output){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.onlyRed();
@@ -372,6 +525,7 @@ void onlyred(string& filename, string& output){
 }
 
 void flip(string& filename, string& output){
+    checkIfOutput(output);
     Image firstImage;
     firstImage.read(filename);
     firstImage.flip();
@@ -405,6 +559,14 @@ void makeTasks(){
     task8();
     task9();
     task10();
+}
+
+void task11(){
+    Image firstImage, secondImage;
+    firstImage.read(circles);
+    secondImage.read(layer1);
+    firstImage.multiply(secondImage);
+    firstImage.write("output/part11.tga");
 }
 
 void task10() {

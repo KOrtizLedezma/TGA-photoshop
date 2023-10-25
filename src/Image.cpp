@@ -137,6 +137,7 @@ void Image::addBlue(int valueBlue){
     int size = head.imageWidth * head.imageHeight;
     for(int i = 0 ; i < size ; i++){
         if(pixels[i].blue + valueBlue  > 255) pixels[i].blue = 255;
+        else if(pixels[i].blue + valueBlue  < 0) pixels[i].blue = 0;
         else pixels[i].blue = pixels[i].blue + valueBlue;
     }
 }
@@ -145,6 +146,7 @@ void Image::addGreen(int valueGreen){
     int size = head.imageWidth * head.imageHeight;
     for(int i = 0 ; i < size ; i++){
         if(pixels[i].green + valueGreen  > 255) pixels[i].green = 255;
+        else if(pixels[i].green + valueGreen  < 0) pixels[i].green = 0;
         else pixels[i].green = pixels[i].green + valueGreen;
     }
 }
@@ -153,6 +155,7 @@ void Image::addRed(int valueRed){
     int size = head.imageWidth * head.imageHeight;
     for(int i = 0 ; i < size ; i++){
         if(pixels[i].red + valueRed  > 255) pixels[i].red = 255;
+        else if(pixels[i].red * valueRed  < 0)pixels[i].red = 0;
         else pixels[i].red = pixels[i].red + valueRed;
     }
 }
@@ -161,6 +164,7 @@ void Image::scaleBlue(int valueBlue){
     int size = head.imageWidth * head.imageHeight;
     for(int i = 0 ; i < size ; i++){
         if(pixels[i].blue * valueBlue  > 255)pixels[i].blue = 255;
+        else if(pixels[i].blue * valueBlue  < 0)pixels[i].blue = 0;
         else pixels[i].blue = pixels[i].blue * valueBlue;
     }
 }
@@ -169,6 +173,7 @@ void Image::scaleGreen(int valueGreen){
     int size = head.imageWidth * head.imageHeight;
     for(int i = 0 ; i < size ; i++){
         if(pixels[i].green * valueGreen  > 255)pixels[i].green = 255;
+        else if(pixels[i].green * valueGreen  < 0)pixels[i].green = 0;
         else pixels[i].green = pixels[i].green * valueGreen;
     }
 }
